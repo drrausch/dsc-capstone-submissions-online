@@ -16,12 +16,15 @@ After creating this source of truth, setting a baseline of current performance i
 An inital Google Trends analysis showed three top design aesthetics that have recently risen to peak popularity. Operating under the assumption that aesthetics just now reaching their peak popularity are less understood than aesthetics that have been around for quite awhile, this project focuses on these aesthetics. 
 
 1. Mid-Century Modern
+
 ![mcm_wordcloud](images/wordcloud_mcm.png)
 
 2. Boho-Chic
+
 ![boho_wordcloud](images/wordcloud_boho.png)
 
 3. Farmhouse 
+
 ![farm_wordcloud](images/wordcloud_farmhouse.png)
 
 Text data was collected on these three design aesthetics by webscraping popular design blogs and publications. These articles were then broken into paragraphs for analyzing. 
@@ -58,7 +61,7 @@ MCM: 97%  |  Boho-Chic: 27%  |  Farmhouse: 83%
 
 As noted above, Boho-Chic does not perform as well as the other two classes in any of the models. In fact, it often performed worse than random chance guessing. In an effort to understand why the model has difficulties classing Boho-Chic, I took a look at twenty words with the highest feature importance in the corpus and their distribution within each class. It's clear that Boho-Chic has the fewest words with high importance, making it very difficult for the model to correctly class these documents. 
 
-![mcm_imp](images/dist_mcm.png) ![boho_imp](images/dist_boho.png) ![farm_imp](images/dist_farmhouse.png)
+![mcm_imp](images/dist_mcm.png) ![boho_imp](images/dist_boho.png) ![farm_imp](images/dist_farm.png)
 
 After creating a source of truth and using it to train a classification model, Etsy product data was passed through to get a general idea of how well Etsy product descriptions match the source of truth. Because our model needs more training on Boho-Chic, only products tagged as MCM or Farmhouse were introduced to the model. 
 Mid-Century Modern performed well with 92% of products recognized as the correct class while only 28% of Farmhouse products were correctly classed. This could mean that Farmhouse product descriptions could use some work in order to be recognizable as Farmhouse to customers.  

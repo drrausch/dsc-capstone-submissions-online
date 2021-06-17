@@ -1,6 +1,6 @@
 ![header](images/header.jpg) 
 
-# Differentiating Design Aesthetics 
+# Differentiating Interior Design Aesthetics 
 ### An NLP Classification Project | Dana Rausch 
 
 ## Business Problem  
@@ -13,7 +13,7 @@ After creating this source of truth, setting a baseline of current performance i
 
 ## Data Overview 
 
-An inital Google Trends analysis showed three top design aesthetics that have recently risen to peak popularity. Operating under the assumption that aesthetics just now reaching their peak popularity are less understood than aesthetics that have been around for quite awhile, this project focuses on these aesthetics. 
+An inital Google Trends analysis showed three top interior design aesthetics that have recently risen to peak popularity. Operating under the assumption that aesthetics just now reaching their peak popularity are less understood than aesthetics that have been around for quite awhile, this project focuses on these aesthetics. 
 
 1. Mid-Century Modern
 
@@ -76,3 +76,6 @@ Mid-Century Modern performed well with 92% of products recognized as the correct
 ##### Future Work: 
 1. Improve Boho Recall: Gather more quality, descriptive text data that will add to overall quality and feature importance 
 2. Expand Aesthetics: Train model on additional design aesthetics such as Art Deco and Minimalism 
+
+##### Thank you for reading! 
+Please let me know if you have any questions, and feel free to connect on [LinkedIn.](https://www.linkedin.com/in/dana-rausch-b73538a6/) 

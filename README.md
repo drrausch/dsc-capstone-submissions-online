@@ -1,132 +1,75 @@
-# Capstone Submission & Review (Online)
+![header](images/header.jpg) 
 
-## Introduction
+# Differentiating Design Aesthetics 
+### An NLP Classification Project | Dana Rausch 
 
-In this lesson, we review the requirements, submission, and review process for the Capstone Project.
+## Business Problem  
 
-## Objectives
+Understanding a customer is crucial to any business; including understanding a customer's interests and expectations when they visit a website. This becomes complicated when dealing with search terms that have little definitive bounds such as design aesthetics. One person's perception of an aesthetic may be completely different than another's - how are companies like Etsy or Pinterest supposed to account for these perceptions and return adequate search results? 
 
-You will be able to:
+First, it's important to understand where customers perceptions are being formed. Maybe they saw an Instagram post tagged with #BohoChic, or read an article by their favorite blogger who just added shiplap to their bedroom for a Farmhouse style. Aggregating these touch points to create a source of truth is the first step in creating a model that understands what key words people will be expecting to see when searching for a design aesthetic. 
 
-* Create project deliverables that meet Flatiron School requirements
-* Submit your Capstone project deliverables in Canvas
-* Prepare for your Capstone review
+After creating this source of truth, setting a baseline of current performance is important. Do current search results match our source of truth?
 
-## Schedule Your Review ASAP
+## Data Overview 
 
-**Reach out to an instructor immediately via Slack to let them know you've started your project and schedule your project review.** If you're not sure who to schedule with, please ask in your cohort channel in Slack.
+An inital Google Trends analysis showed three top design aesthetics that have recently risen to peak popularity. Operating under the assumption that aesthetics just now reaching their peak popularity are less understood than aesthetics that have been around for quite awhile, this project focuses on these aesthetics. 
 
-## Create Your Project Deliverables
+1. Mid-Century Modern
+![mcm_wordcloud](images/wordcloud_mcm.png)
 
-Complete the deliverables for your project, guided by the rubric at the bottom of the main project assignment. Keep in mind that the audience for these deliverables is not only your teacher, but also potential employers. Employers will look at your project deliverables to evaluate multiple skills, including coding, modeling, communication, and domain knowledge. You will want to polish these as much as you can, both during the course and afterwards.
+2. Boho-Chic
+![boho_wordcloud](images/wordcloud_boho.png)
 
-### GitHub Repository
+3. Farmhouse 
+![farm_wordcloud](images/wordcloud_farmhouse.png)
 
-Your GitHub repository is the public-facing version of your project that your instructors and potential employers will see - make it as accessible as you can. At a minimum, it should contain all your project files and a README.md file that summarizes your project and helps visitors navigate the repository.
+Text data was collected on these three design aesthetics by webscraping popular design blogs and publications. These articles were then broken into paragraphs for analyzing. 
 
-### Jupyter Notebook
+![doc_count](images/number_of_enteries.png)
 
-Your Jupyter Notebook is the primary source of information about your analysis. At a minimum, it should contain or import all of the code used in your project and walk the reader through your project from start to finish. You may choose to use multiple Jupyter Notebooks in your project, but you should have one that provides a full project overview as a point of entry for visitors.
+## Methodology & Results 
 
-### Non-Technical Presentation
+After an initial cleaning of the data, only nouns and adjectives were kept for the final models as these words proved to be much more important in training a model to identify design aesthetics. This should also help to bridge the gap between creating a source of truth using articles and presenting the model with product descriptions from a retail site. 
 
-Your non-technical presentation is your opportunity to communicate clearly and concisely about your project and it's real-world relevance. The target audience should be people with limited technical knowledge who may be interested in leveraging your project. We recommend using Google Slides, PowerPoint or Keynote to create your presentation slides. You will then record yourself delivering the presentation.
+As we can see in the chart below, a straight word count is not helpful for this project. Words like "room," and "space" don't have much descriptive influence.
 
-## Submit Your Project
+![word_count](images/top_20_words.png)
 
-To submit your project in Canvas, you will create and upload PDF versions of three project deliverables, then upload a recording of your video presentation. You will also submit the URL to your GitHub repository in a separate assignment.
+Using a TF-IDF vectorizer provided a prioritization of text that helped to train a classification model without having to collect more data. At this point, all words other than nouns and adjectives were also removed from the corpus. The bar chart below, made using feature importances after modeling, clearly shows that words with the most importance are different than words with the highest count. 
 
-### Presentation Slides PDF Creation
+![feat_imp](images/top_20_importance.png) 
 
-1. Export your presentation as a PDF from the program in which you created it.
-2. Give it a short descriptive file name (e.g. `presentation.pdf`).
-3. Place a copy of the PDF in your GitHub repository.
+A Multinomial Naive Bayes classification model was used for this project and recall was prioritized as search results not matching a customers criteria would be better than losing sales due to products not being included in the search. Below we'll discuss model iterations as well as performances of each class. 
 
-### GitHub Repository PDF Creation
+First, articles were taken as a whole and used as a single document, however this resulted in skewed performance across classes as the TF-IDF vectorizer was not returning valuable importance values. (This is because the inverse document frequency was not proportionate to term frequency due to few, but lengthy, documents.) The confusion matrix below shows the skewed performance between the three classes. Next, we'll talk about how this was improved upon. 
 
-1. Navigate to the root directory of your project repository on GitHub, using your browser (we recommend Google Chrome).
-2. Save the webpage as a PDF using the browser's Print functionality ([Google Chrome Save to PDF instructions](https://www.wikihow.com/Save-a-Web-Page-as-a-PDF-in-Google-Chrome))
-3. Give it a short descriptive file name (e.g. `github.pdf`).
+Recall by class: 
+MCM: 100%  |  Boho-Chic: 29%  |  Farmhouse: 57% 
 
-![Repository PDF Creation](https://raw.githubusercontent.com/learn-co-curriculum/dsc-project-submissions-online/master/repo_pdf.gif)
+![org_conf_matrix](images/matrix_before_para.png)
 
-### Jupyter Notebook PDF Creation
+Breaking down articles into paragraphs greatly improved the performance for the Farmhouse aesthetic, while having a slightly opposite affect on the other two classes. This model is an improvement on the total recall score (from 62% to 70%), and it's clear the underlying data for Boho-Chic needs to be looked at. 
 
-1. Open your Notebook in your browser (we recommend Google Chrome).
-2. **Run the Notebook from start to finish** so that your output is visible.
-3. Save the page as a PDF using the browser's Print functionality ([Google Chrome Save to PDF instructions](https://www.wikihow.com/Save-a-Web-Page-as-a-PDF-in-Google-Chrome))
-4. Give it a short descriptive file name (e.g. `notebook.pdf`).
+Recall by class: 
+MCM: 97%  |  Boho-Chic: 27%  |  Farmhouse: 83% 
 
-If you have difficulty creating a PDF version of your notebook, you can use [this tool](https://htmtopdf.herokuapp.com/ipynbviewer/) instead. Set the ‘Results Format’ to “HTML + PDF”. Then click ‘View and Convert’. Once it’s done, you should see links to .html and .pdf versions above the ‘View and Convert’ button.
+![final_conf_matrix](images/confusion_matrix.png)
 
-### PDF Submission in Canvas
+As noted above, Boho-Chic does not perform as well as the other two classes in any of the models. In fact, it often performed worse than random chance guessing. In an effort to understand why the model has difficulties classing Boho-Chic, I took a look at twenty words with the highest feature importance in the corpus and their distribution within each class. It's clear that Boho-Chic has the fewest words with high importance, making it very difficult for the model to correctly class these documents. 
 
-You will need to submit all three PDF files as a single submission:
+![mcm_imp](images/dist_mcm.png) ![boho_imp](images/dist_boho.png) ![farm_imp](images/dist_farmhouse.png)
 
-1. Click "Submit Assignment" at the top of the "Capstone Project" assignment in the "Milestones" topic.
-2. In the "File Upload" box, click "Choose File" button to upload a single file.
-3. Click the "Add Another File" link to upload an additional file.
-4. Repeat Step 3 to upload one more file. After this is done, all three files should be uploaded.
-5. Hit the blue "Submit Assignment" button.
+After creating a source of truth and using it to train a classification model, Etsy product data was passed through to get a general idea of how well Etsy product descriptions match the source of truth. Because our model needs more training on Boho-Chic, only products tagged as MCM or Farmhouse were introduced to the model. 
+Mid-Century Modern performed well with 92% of products recognized as the correct class while only 28% of Farmhouse products were correctly classed. This could mean that Farmhouse product descriptions could use some work in order to be recognizable as Farmhouse to customers.  
 
-![Project PDF Submission](https://raw.githubusercontent.com/learn-co-curriculum/dsc-project-submissions-online/master/project_3pdf_submission.gif)
+## Recommendations & Future Work 
 
-### Presentation Recording and Submission
+##### Recommendations: 
+1. Refined Search Results: Improve search results by implementing source-of-truth classification
+2. Product Tag Recommendations: Recommend product tags for sellers based on product descriptions, or recommend buzzwords for descriptions when tags are chosen first 
+3.Centralized Source-of-Truth: Resources for sellers to familiarize themselves with different aesthetics allowing for better product descriptions and potentially more sales
 
-After you've submitted the PDF files for the project assignment, you will upload a recording of your presentation as a media comment on your submission:
-
-1. Record your live presentation to a video file on your computer. We recommend using Zoom to record your live presentation to a local video file ([instructions here](https://support.zoom.us/hc/en-us/articles/201362473-Local-recording)). Video files must be under 500 MB and formatted as 3GP, ASF, AVI, FLV, M4V, MOV, MP4, MPEG, QT, or WMV.
-2. Click "Submission Details" on the top right of the "Capstone Project" assignment in the "Milestones" topic.
-3. Click "Media Comment" beneath the "Add a Comment" box on the right of the page.
-4. Click "Upload Media" and "Select Video File" to upload your file.
-5. The thumbnail for your video will appear as a blue rectangle while Zoom processes your file - return to this page later to confirm that your recording uploaded successfully.
-
-![Video Recording Submission](https://raw.githubusercontent.com/learn-co-curriculum/dsc-project-submissions-online/master/video_recording_submission.gif)
-
-### URL Submission in Canvas
-
-There is an additional Canvas assignment where you will just enter the URL for your project's GitHub repository. This is located in the "Milestones" topic in this course as "Capstone Project - GitHub Repository URL."
-
-## Prepare For Project Review
-
-Project reviews are focused on preparing you for technical interviews. Treat project reviews as if they were technical interviews, in both attitude and technical presentation *(sometimes technical interviews will feel arbitrary or unfair - if you want to get the job, commenting on that is seldom a good choice)*.
-
-The project review is comprised of a 45 minute 1:1 session with one of the instructors. During your project review, be prepared to:
-
-### 1. Deliver your PDF presentation to a non-technical stakeholder.
-In this phase of the review (~10 mins) your instructor will play the part of a non-technical stakeholder that you are presenting your findings to. The presentation  should not exceed 5 minutes, giving the "stakeholder" 5 minutes to ask questions.
-
-In the first half of the presentation (2-3 mins), you should summarize your methodology in a way that will be comprehensible to someone with no background in data science and that will increase their confidence in you and your findings. In the second half (the remaining 2-3 mins) you should summarize your findings and be ready to answer a couple of non-technical questions from the audience. The questions might relate to technical topics (sampling bias, confidence, etc) but will be asked in a non-technical way and need to be answered in a way that does not assume a background in statistics or machine learning. You can assume a smart, business stakeholder, with a non-quantitative college degree.
-
-### 2. Go through the Jupyter Notebook, answering questions about how you made certain decisions. Be ready to explain things like:
-    * "How did you pick the question(s) that you did?"
-    * "Why are these questions important from a business perspective?"
-    * "How did you decide on the data cleaning options you performed?"
-    * "Why did you choose a given method or library?"
-    * "Why did you select those visualizations and what did you learn from each of them?"
-    * "Why did you pick those features as predictors?"
-    * "How would you interpret the results?"
-    * "How confident are you in the predictive quality of the results?"
-    * "What are some of the things that could cause the results to be wrong?"
-
-Think of the first phase of the review (~30 mins) as a technical boss reviewing your work and asking questions about it before green-lighting you to present to the business team. You should practice using the appropriate technical vocabulary to explain yourself. Don't be surprised if the instructor jumps around or sometimes cuts you off - there is a lot of ground to cover, so that may happen.
-
-If any requirements are missing or if significant gaps in understanding are uncovered, be prepared to do one or all of the following:
-* Perform additional data cleanup, visualization, feature selection, modeling and/or model validation
-* Submit an improved version
-* Meet again for another Project Review
-
-What won't happen:
-* You won't be yelled at, belittled, or scolded
-* You won't be put on the spot without support
-* There's nothing you can do to instantly fail or blow it
-
-## Grading
-
-Your teacher will use the rubric at the bottom of the Capstone project assignment to grade your project. In order to pass, you must properly submit your project and score "Accomplished" or "Exemplary" on nearly all rubric elements. You will receive a score of P (Pass) or NP (No Pass) - you must pass in order to graduate with your cohort. Your teacher will grade your submission sometime after your review.
-
-## Conclusion
-
-Thank you for your hard work on this project - you're going to do great! Remember that future employers will also look at your projects when deciding whether to hire you, so having complete, polished projects will help you tremendously not only to pass this assignment, but also to get the job you want after you graduate.
-
-If you have any questions about the project submission or review process, don't hesitate to ask your teacher.
+##### Future Work: 
+1. Improve Boho Recall: Gather more quality, descriptive text data that will add to overall quality and feature importance 
+2. Expand Aesthetics: Train model on additional design aesthetics such as Art Deco and Minimalism 

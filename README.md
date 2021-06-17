@@ -55,7 +55,7 @@ MCM: 100%  |  Boho-Chic: 29%  |  Farmhouse: 57%
 Breaking down articles into paragraphs greatly improved the performance for the Farmhouse aesthetic, while having a slightly opposite affect on the other two classes. This model is an improvement on the total recall score (from 62% to 70%), and it's clear the underlying data for Boho-Chic needs to be looked at. 
 
 Recall by class: 
-MCM: 97%  |  Boho-Chic: 27%  |  Farmhouse: 83% 
+MCM: 98%  |  Boho-Chic: 27%  |  Farmhouse: 83% 
 
 ![final_conf_matrix](images/confusion_matrix.png)
 
